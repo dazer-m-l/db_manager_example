@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario con SQL y NoSQL</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="container">
+        <h2>Formulario de Datos</h2>
+        <form id="dataForm">
+            <div class="switch-container">
+                <label>Seleccionar Base de Datos:</label>
+                <input type="radio" name="dbType" value="sql" id="sql" checked> <label for="sql">SQL</label>
+                <input type="radio" name="dbType" value="nosql" id="nosql"> <label for="nosql">NoSQL</label>
+            </div>
+
+            <div class="inputBox">
+                <label for="usuario">Nombre Completo</label>
+                <input type="text" name="usuario" id="usuario" required>
+            </div>
+
+            <div class="inputBox">
+                <label for="password">Contraseña</label>
+                <input type="password" name="password" id="password" required>
+            </div>
+
+            <div class="inputBox">
+                <label for="imagen">Adjuntar Imagen</label>
+                <input type="file" name="imagen" id="imagen">
+            </div>
+
+            <div class="inputBox">
+                <label for="fecha">Fecha</label>
+                <input type="date" name="fecha" id="fecha" required>
+            </div>
+
+            <div class="inputBox">
+                <label for="descripcion">Descripción</label>
+                <textarea id="descripcion" name="descripcion" rows="4" required></textarea>
+            </div>
+
+            <button type="submit" id="submit">Enviar Datos</button>
+        </form>
+    </div>
+
+    <div class="tables-container">
+        <h3>Datos en SQL</h3>
+        <table id="sqlTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Fecha</th>
+                    <th>Descripción</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Aquí se llenarán los datos dinámicamente -->
+            </tbody>
+        </table>
+
+        <h3>Datos en NoSQL (MongoDB)</h3>
+        <table id="nosqlTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Fecha</th>
+                    <th>Descripción</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Aquí se llenarán los datos dinámicamente -->
+            </tbody>
+        </table>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

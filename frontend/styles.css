@@ -1,0 +1,100 @@
+/* Estilos generales */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #121212;
+    color: white;
+    margin: 0;
+    padding: 0;
+}
+
+/* Contenedor del formulario */
+.container {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    width: 50%;
+    margin: 20px auto;
+    text-align: center;
+}
+
+/* Estilo de los inputs */
+.inputBox {
+    margin-bottom: 15px;
+}
+
+.inputBox input,
+.inputBox textarea {
+    width: 100%;
+    padding: 8px;
+    border: none;
+    border-radius: 5px;
+}
+
+/* Botón de envío */
+button {
+    background-color: #0072ff;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 100%;
+}
+
+/* 📌 Contenedor de las tablas con grid */
+.tables-container {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr); /* 6 columnas */
+    gap: 20px;
+    padding: 20px;
+    width: 90%;
+    margin: auto;
+}
+
+/* 📌 Cada tabla ocupará 3 columnas */
+.table-box {
+    grid-column: span 3; /* Ocupará 3 de las 6 columnas */
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+/* Estilos de las tablas */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background-color: #0072ff;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+/* 📌 Hacer que las tablas sean responsivas en móviles */
+@media (max-width: 768px) {
+    .container {
+        width: 80%;
+    }
+
+    .tables-container {
+        grid-template-columns: 1fr; /* Se apilan en una sola columna */
+    }
+
+    .table-box {
+        grid-column: span 6; /* Ocupará todas las columnas en móviles */
+    }
+}
