@@ -1,77 +1,72 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const form = document.querySelector("form");
-    const switchButton = document.getElementById("switch"); // Botón para cambiar entre SQL y NoSQL
-    const tableSQL = document.getElementById("tableSQL tbody");
-    const tableNoSQL = document.getElementById("tableNoSQL tbody");
+    const form = document.getElementById("registroForm");
+    const dbSwitch = document.getElementById("dbSwitch"); 
+    const viewSwitch = document.getElementById("viewSwitch"); 
+    const tablaDatos = document.getElementById("tablaDatos");
 
-    // 📌 1️⃣ Evento para enviar datos
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
-
+        
         const formData = new FormData(form);
-        const data = {
-            usuario: formData.get("usuario"),
-            password: formData.get("password"),
-            fecha: formData.get("fecha"),
-            descripcion: formData.get("descripcion"),
-            imagen: formData.get("imagen").name, // Solo enviamos el nombre del archivo
-            database: switchButton.checked ? "nosql" : "sql" // SQL o NoSQL
-        };
+        const database = dbSwitch.checked ? "mongo" : "mysql";
+        formData.append("database", database);
+
+        console.log("📤 Enviando datos:", Object.fromEntries(formData.entries()));
 
         try {
-            const response = await fetch("http://localhost:5000/api/guardar", {
+            const response = await fetch(`http://localhost:5000/api/usuarios/${database}`, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(data)
+                body: formData
             });
 
-            if (!response.ok) throw new Error("Error en el servidor");
+            if (!response.ok) throw new Error(`Error en el servidor: ${response.statusText}`);
 
             alert("Datos guardados correctamente");
-
-            // Recargar las tablas
+            form.reset();
             loadData();
         } catch (error) {
-            console.error("Error:", error);
+            console.error("Error al guardar los datos:", error);
         }
     });
 
-    // 📌 2️⃣ Función para cargar datos en ambas tablas
     async function loadData() {
+        const database = viewSwitch.checked ? "mongo" : "mysql";
+
         try {
-            // Obtener datos de SQL
-            const sqlResponse = await fetch("http://localhost:5000/api/datos/sql");
-            const sqlData = await sqlResponse.json();
+            const response = await fetch(`http://localhost:5000/api/usuarios/${database}`);
+            if (!response.ok) throw new Error(`Error al cargar los datos: ${response.statusText}`);
 
-            // Obtener datos de NoSQL (MongoDB)
-            const noSqlResponse = await fetch("http://localhost:5000/api/datos/nosql");
-            const noSqlData = await noSqlResponse.json();
-
-            // Llenar tablas
-            fillTable(tableSQL, sqlData);
-            fillTable(tableNoSQL, noSqlData);
+            const data = await response.json();
+            fillTable(data);
         } catch (error) {
-            console.error("Error al cargar los datos:", error);
+            console.error("❌ Error al cargar los datos:", error);
         }
     }
 
-    // 📌 3️⃣ Función para llenar las tablas
-    function fillTable(table, data) {
-        table.innerHTML = ""; // Limpiar tabla antes de actualizar
-        data.forEach((item) => {
-            const row = table.insertRow();
+    function fillTable(data) {
+        tablaDatos.innerHTML = "";
+
+        if (!data || data.length === 0) {
+            tablaDatos.innerHTML = "<tr><td colspan='6'>No hay datos disponibles</td></tr>";
+            return;
+        }
+
+        data.forEach(item => {
+            const row = document.createElement("tr");
             row.innerHTML = `
-                <td>${item.usuario}</td>
+                <td>${item.id || item._id}</td>
+                <td>${item.nombre}</td>
                 <td>${item.password}</td>
-                <td>${item.fecha}</td>
+                <td>
+                    ${item.imagen ? `<img src="${item.imagen_url || `http://localhost:5000/uploads/${item.imagen}`}" alt="${item.nombre}" width="80">` : "Sin imagen"}
+                </td>
+                <td>${new Date(item.fecha).toLocaleDateString()}</td>
                 <td>${item.descripcion}</td>
-                <td><img src="${item.imagen}" width="50"></td>
             `;
+            tablaDatos.appendChild(row);
         });
     }
 
-    // 📌 4️⃣ Cargar los datos al inicio
+    viewSwitch.addEventListener("change", loadData);
     loadData();
 });
