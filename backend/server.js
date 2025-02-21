@@ -32,6 +32,7 @@ app.use("/uploads", express.static("uploads"));
 
 module.exports = upload;
 
+
 const usuariosMySQLRoutes = require("./routes/mysql_user");
 const usuariosMongoRoutes = require("./routes/mongo_user");
 
@@ -39,6 +40,7 @@ app.use("/api/usuarios/mysql", usuariosMySQLRoutes);
 app.use("/api/usuarios/mongo", usuariosMongoRoutes);
 
 connectMongoDB().catch(error => console.error("Error en MongoDB:", error));
+
 mysqlPool.getConnection()
     .then(connection => {
         console.log("Conectado a la DB MySQL");

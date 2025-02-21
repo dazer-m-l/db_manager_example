@@ -26,8 +26,6 @@ const obtenerUsuarioPorId = async (req, res) => {
 
 const crearUsuario = async (req, res) => {
     try {
-        console.log("📌 Datos recibidos en el backend:", req.body);
-        console.log("📌 Archivo recibido en el backend:", req.file);
 
         const { nombre, password, fecha, descripcion } = req.body;
         const imagen = req.file ? req.file.filename : "default.jpg";
