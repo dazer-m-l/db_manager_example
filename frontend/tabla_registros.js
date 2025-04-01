@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const modalImagen = document.getElementById("modalImagen");
     const modalImagenPreview = document.getElementById("modalImagenPreview");
     let editId = null;
-
+// Carga de datos 
     async function loadData() {
         if (!tablaDatos) return;
         const database = viewSwitch?.checked ? "mongo" : "mysql";
@@ -23,12 +23,63 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.error("Error al cargar datos:", error);
         }
     }
-   
+// Vista de datos    
     viewSwitch.addEventListener("change", () => {
         loadData();
     });
+// Filtro del input
+    document.getElementById("searchInput").addEventListener("input", filtrarUsuarios);
+    function filtrarUsuarios() {
+        const searchInput = document.getElementById("searchInput");
+        const filter = searchInput.value.toLowerCase();
+        const rows = tablaDatos.getElementsByTagName("tr");
+        let found = false;
     
-
+        const noDataRow = document.getElementById("noDataRow");
+    
+        for (let i = 0; i < rows.length; i++) {
+            let id = rows[i].getElementsByTagName("td")[0];
+            let usuario = rows[i].getElementsByTagName("td")[1];
+            let fecha = rows[i].getElementsByTagName("td")[4]; 
+            let descripcion = rows[i].getElementsByTagName("td")[5];
+    
+            if (id || usuario || fecha || descripcion) {
+                let idText = id ? id.textContent || id.innerText : "";
+                let usuarioText = usuario ? usuario.textContent || usuario.innerText : "";
+                let fechaText = fecha ? fecha.textContent || fecha.innerText : "";
+                let descripcionText = descripcion ? descripcion.textContent || descripcion.innerText : "";
+    
+                if (
+                    idText.toLowerCase().includes(filter) ||
+                    usuarioText.toLowerCase().includes(filter) ||
+                    fechaText.toLowerCase().includes(filter) ||
+                    descripcionText.toLowerCase().includes(filter)
+                ) {
+                    rows[i].style.display = "";
+                    found = true;
+                } else {
+                    rows[i].style.display = "none";
+                }
+            }
+        }
+    
+        if (!found && filter.trim() !== "") {
+            if (!noDataRow) {
+                let noData = document.createElement("tr");
+                noData.id = "noDataRow";
+                noData.innerHTML = "<td colspan='7'>No hay datos disponibles</td>";
+                tablaDatos.appendChild(noData);
+            }
+        } else {
+            if (noDataRow) noDataRow.remove();
+        }
+    
+        if (filter.trim() === "") {
+            loadData();
+        }
+    }
+        
+// Tabla
     function fillTable(data) {
         console.log("Llenando tabla con datos:", data);
         tablaDatos.innerHTML = "";
@@ -68,13 +119,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             btnContainer.classList.add("btn-container");
 
             const editBtn = document.createElement("button");
-            editBtn.classList.add("btn", "btn-warning", "edit-btn");
+            editBtn.classList.add("btn", "btn-warning", "btn-sm", "w-100");
             editBtn.textContent = "✏ Editar";
             editBtn.dataset.id = item.id || item._id;
-            editBtn.addEventListener("click", () => openEditModal(item.id || item._id));
+            editBtn.addEventListener("click", () => openEditModal(item.id || item._id))
 
             const deleteBtn = document.createElement("button");
-            deleteBtn.classList.add("btn", "btn-danger", "delete-btn");
+            deleteBtn.classList.add("btn", "btn-danger", "btn-sm", "w-100");
             deleteBtn.textContent = "🗑 Eliminar";
             deleteBtn.dataset.id = item.id || item._id;
             deleteBtn.addEventListener("click", () => deleteUser(item.id || item._id));
@@ -95,7 +146,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             tablaDatos.appendChild(row);
         });
     }
-
+// Funcionamiento del Modal para editar 
     async function openEditModal(id) {
         const database = viewSwitch?.checked ? "mongo" : "mysql";
         try {
@@ -117,7 +168,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
     
-
+// Eliminar User
     function deleteUser(id) {
         const database = viewSwitch.checked ? "mongo" : "mysql";
         Swal.fire({
@@ -145,7 +196,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         });
     }
-
+// Reglas de modal
     modalForm.addEventListener("submit", async (e) => {
         e.preventDefault();
     
